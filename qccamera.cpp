@@ -23,36 +23,63 @@
 
 #include <QTextStream>
 #include <QString>
-
+using namespace gcamera;
+	
 QVector<QString> QCCamera::camList;
 
 QString QCCamera::name() {
-    return camera_name;
+	QString qcamera = camera_name;
+    return qcamera;
 }
 
 #ifdef CANON_SDK_BUILD
 QString QCCamera::curFile;
 
-EdsError QCCamera::downloadImage(EdsDirectoryItemRef directoryItem, QString dir_to_save_to)
+EdsError QCCamera::downloadImage(const EdsDirectoryItemRef &directoryItem, const QString &dir_to_save_to)
 {
     EdsError err = EDS_ERR_OK;
     EdsStreamRef stream = NULL;
     EdsDirectoryItemInfo dirItemInfo;
-
-    err = EdsGetDirectoryItemInfo( directoryItem, & dirItemInfo );
-
+    try{
+    err = EdsGetDirectoryItemInfo(&directoryItem,& dirItemInfo );
+    }catch(){
+    //Need to add the Error Handlings.	
+	
+	
+    }catch(...){
+    EdsError::~EdsError;
+    EdsDirectoryItemRef::~EdsDirectoryItemRef;
+    EdsDirectoryItemInfo::~EdsDirectoryItemInfo;    
+    }
     if(err == EDS_ERR_OK)
     {
         curFile = dir_to_save_to + "/" + dirItemInfo.szFileName;
-        
+        try{
         err = EdsCreateFileStream( curFile.toUtf8(),
-                                   kEdsFileCreateDisposition_CreateAlways,
+                                   kEdsFileCreateDisposition_CreateAlways &KedsFCD,
                                    kEdsAccess_ReadWrite, &stream);
+	}catch(){
+	//Need to add Exception hgandling
+	
+	
+	}catch(...){		
+	QCCamera::~QCCamera;
+	kEdsFileCreateDisposition_CreateAlways::~kEdsFileCreateDisposition_CreateAlways;
+	kEdsAccess_ReadWrite::~kEdsAccess_ReadWrite;
+	}
     }
 
     if(err == EDS_ERR_OK)
     {
-        err = EdsDownload( directoryItem, dirItemInfo.size, stream);
+            try{
+	    err = EdsDownload(&directoryItem,&dirItemInfo.size,&stream);
+	    }catch(){
+	    //Required the Exception handling  
+	    }catch(...){
+	    EdsDirectoryItemRef::~EdsDirectoryItemRef;
+            EdsDirectoryItemInfo::~EdsDirectoryItemInfo; 
+	    EdsStreamRef::~EdsStreamRef;	    
+	    }
     }
 
     if(err == EDS_ERR_OK)
@@ -434,5 +461,35 @@ int herr(int ret, const char *fname, const int lnum) {
     }
     return ret;
 }
+EdsDirectoryItemRef::~EdsDirectoryItemRef(){
+//Need to add the Functionalities
+
+
+
+}
+EdsDirectoryItemInfo::~EdsDirectoryItemInfo(){
+//Need to add the Functionalities
+
+
+
+}
+EdsStreamRef::~EdsStreamRef(){
+//Need to add the Functionalities
+
+
+
+
+}
+
+
+
+
+
+
+
+
+
+
+
 
 #endif
