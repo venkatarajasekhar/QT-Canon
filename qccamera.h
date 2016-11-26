@@ -31,13 +31,15 @@
 
 #else
 
-extern "C" {
+//extern "C" {
+namespace gcamera{
 #include <gphoto2/gphoto2-camera.h>
 #include <gphoto2/gphoto2-filesys.h>
 #include <gphoto2/gphoto2-port-info-list.h>
 #include <gphoto2/gphoto2-port-log.h>
 #include <gphoto2/gphoto2-setting.h>
 };
+
 #include <QMap>
 
 #endif
